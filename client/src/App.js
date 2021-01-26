@@ -1,8 +1,7 @@
 import React from 'react'
 import JWTCookie from './JWTCookie'
 import JWTLocalStorage from './JWTLocalStorage'
-import HomeState from './JWTState'
-import Content from './Content'
+import State from './JWTState'
 import Header from './Header'
 import {Router, Route,Switch} from 'react-router-dom';
 import history from './history';
@@ -16,7 +15,7 @@ function App() {
                         <Switch>
                             <Route path="/" exact component={JWTLocalStorage}/>
                             <Route path="/Cookie" exact component={JWTCookie}/>
-                            <Route path="/State" exact component={HomeState}/>
+                            <Route path="/State" exact component={State}/>
                         </Switch>
                 </div>
             </Router>
