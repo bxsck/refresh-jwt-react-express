@@ -1,8 +1,8 @@
-import React,{useState,useEffect} from 'react'
-import axios from 'axios';
-import Cookies from "js-cookie";
+/* import React,{useState,useEffect} from 'react'
+import UserContext from './userContext'
 
 function Content() {
+    //static contextType = UserContext;
     const [txt,setTxt] = useState("login plz");
     useEffect(()=>{
         let accessToken = Cookies.get("access");
@@ -38,3 +38,4 @@ function Content() {
 }
 
 export default Content
+ */

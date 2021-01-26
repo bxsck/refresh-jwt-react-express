@@ -18,15 +18,16 @@ const Home = () => {
                         // set message and return.
                         resolve(false);
                     } else {
-                        const { accessToken } = data.data;
+                        const { accessToken, refreshToken } = data.data;
                         Cookies.set("access", accessToken);
+                        Cookies.set("refresh", refreshToken);
                         resolve(accessToken);
                     }
                 });
         });
     };
 
-    const requestLogin = async (accessToken, refreshToken) => {
+    const protectedStatus = async (accessToken, refreshToken) => {
         console.log("AT : ",accessToken,"RT : ", refreshToken);
         return new Promise((resolve, reject) => {
             axios
@@ -44,7 +45,7 @@ const Home = () => {
                             data.data.message === "Access token expired"
                         ) {
                             const accessToken = await refresh(refreshToken);
-                            return await requestLogin(
+                            return await protectedStatus(
                                 accessToken,
                                 refreshToken
                             );
@@ -77,7 +78,11 @@ const Home = () => {
     };
 
     const hasAccess = async (accessToken, refreshToken) => {
-        if (!refreshToken) return null;
+        if (!refreshToken){
+            setContent("Log in to view protected content")
+            console.log("No refreshToken please log in");
+            return null;
+        } 
 
         if (accessToken === undefined) {
             // generate new accessToken (old accessToken expired)
@@ -97,12 +102,26 @@ const Home = () => {
         if (!accessToken) {
             // Set message saying login again.
         } else {
-            await requestLogin(accessToken, refreshToken);
+            await protectedStatus(accessToken, refreshToken);
         }
     };
 
+    const handleLogout = async () => {
+        try {
+          let refreshToken = Cookies.get("refresh");
+          Cookies.remove("access");
+          Cookies.remove("refresh");
+          await axios.delete("http://localhost:5000/logout", { token: refreshToken });
+          window.location.reload();
+          console.log("Logged out. refreshToken has ben removed")
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
     return (
         <div className="ui container">
+            <h3>JWT STORED IN COOKIE</h3>
             <form className="ui form" action="" onChange={handleChange} onSubmit={handleSubmit}>
                 <input name="email" type="email" placeholder="Email address" />
                 <br />
@@ -123,6 +142,12 @@ const Home = () => {
             </div><br/>
             <div>
                 <button className="ui blue button" onClick={protect}>Access Protected Content</button>
+            </div><br/>
+            <div>
+                <button className="ui red google button" onClick={handleLogout}>
+                      <i className="sign-out icon" />
+                        Sign Out
+                    </button>
             </div>
             
         </div>

@@ -9,10 +9,11 @@ function Header() {
             </Link>
             <div className="right menu">
                 <div className="item">
-                    Hello World
+                    Menu | 
                 </div>
-                <Link to="/" className="item">Home</Link>
-                <Link to="/content" className="item">Content</Link>
+                <Link to="/" className="item">LocalStorage</Link>
+                <Link to="/Cookie" className="item">Cookies</Link>
+                <Link to="/State" className="item">State</Link>
             </div>
         </div>
     )

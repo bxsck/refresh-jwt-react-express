@@ -16,7 +16,7 @@ app.use(cors());
 // Creates a new accessToken using the given refreshToken;
 app.post("/refresh", (req, res, next) => {
     const refreshToken = req.body.token
-    console.log("received token", refreshToken);
+    //console.log("received token", refreshToken);
     if (!refreshToken || !refreshTokens.includes(refreshToken)) {
         return res.json({ message: "Refresh token not found, login again" });
     }
@@ -91,8 +91,8 @@ app.post("/login", (req, res) => {
         return res.status(404).json({ message: "Body empty" });
     }
 
-    let accessToken = jwt.sign(user, "access", { expiresIn: "1s" });
-    let refreshToken = jwt.sign(user, "refresh", { expiresIn: "3s" });
+    let accessToken = jwt.sign(user, "access", { expiresIn: "30s" });
+    let refreshToken = jwt.sign(user, "refresh", { expiresIn: "5m" });
     refreshTokens.push(refreshToken);
 
     return res.status(201).json({
@@ -106,7 +106,9 @@ app.delete("/logout", async (req, res) => {
       //delete the refresh token saved in database:
       //const  refreshToken = req.body.token;
       //blockedTokens.push(refreshToken);
+      //const delRtIndex = array.indexOf(5);
       //refreshTokens = refreshTokens.filter(token => token != refreshToken);
+      //refreshTokens.splice(delRtIndex,1);
       return res.status(200).json({ success: "User logged out!" });
     } catch (error) {
       console.error(error);

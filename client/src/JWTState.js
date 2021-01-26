@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Cookies from "js-cookie";
-import api from './api'
 
-const HomeState = () => {
+const JWTState = () => {
     const [user, setUser] = useState({});
     const [content, setContent] = useState("");
     const [accessToken, setAccessToken] = useState("");
@@ -21,11 +19,6 @@ const HomeState = () => {
                         // set message and return.
                         resolve(false);
                     } else {
-                        //const { accessToken } = data.data;
-                        //const { refreshToken } = data.data;
-                        //Cookies.set("accesss", accessToken);
-                        //localStorage.setItem("access", accessToken);
-                        //localStorage.setItem("refresh", refreshToken);
                         setAccessToken(data.data.accessToken);
                         setRefreshToken(data.data.refreshToken);
                         resolve(accessToken);
@@ -52,7 +45,7 @@ const HomeState = () => {
                             data.data.message === "Access token expired"
                         ) {
                             AT = await refresh(RF);
-                            if (AT != accessToken) setAccessToken(AT);
+                            if (AT !== accessToken) setAccessToken(AT);
                             return await protectedStatus(
                                 accessToken,
                                 refreshToken
@@ -78,14 +71,9 @@ const HomeState = () => {
         e.preventDefault();
         console.log("log in");
         await axios.post("http://localhost:5000/login", { user }).then(data => {
-            //const { accessToken, refreshToken } = data.data;
-
-            //Cookies.set("accesss", accessToken);
-            //Cookies.set("refresh", refreshToken);
-            //localStorage.setItem("access", accessToken);
-            //localStorage.setItem("refresh", refreshToken);
-            setAccessToken(data.data.accessToken);
-            setRefreshToken(data.data.refreshToken);
+            const { accessToken, refreshToken } = data.data;
+            setAccessToken(accessToken);
+            setRefreshToken(refreshToken);
             console.log("login success");
         });
         console.log("login AT : ", accessToken,"RT : ", refreshToken);
@@ -110,8 +98,8 @@ const HomeState = () => {
         let AT = accessToken;
         let RT = refreshToken; 
         AT = await hasAccess(AT, RT);
-        if (AT != accessToken) {setAccessToken(AT); AT=accessToken;}
-        if (accessToken) {
+        if (AT !== accessToken) setAccessToken(AT);
+        if (!accessToken) {
             // Set message saying login again.
         } else {
             await protectedStatus(accessToken, refreshToken);
@@ -120,8 +108,6 @@ const HomeState = () => {
 
     const handleLogout = async () => {
         try {
-          //setAppState({ ...appState, loading: true });
-          //localStorage.removeItem("access");
           //localStorage.removeItem("refresh");
           setAccessToken(undefined);
           setRefreshToken(undefined);
@@ -129,13 +115,12 @@ const HomeState = () => {
           window.location.reload();
         } catch (error) {
           console.error(error);
-          //setAppState({ ...appState, loading: false });
-          //alert(error.response.data.error);
         }
       };
 
     return (
         <div className="ui container">
+            <h3>JWT STORED IN REACT STATE (browser memory)</h3>
             <form className="ui form" action="" onChange={handleChange} onSubmit={handleSubmit}>
                 <input name="email" type="email" placeholder="Email address" />
                 <br />
@@ -169,4 +154,4 @@ const HomeState = () => {
     );
 }
 
-export default HomeState;
+export default JWTState;
