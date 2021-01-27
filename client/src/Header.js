@@ -14,6 +14,7 @@ function Header() {
                 <Link to="/" className="item">LocalStorage</Link>
                 <Link to="/Cookie" className="item">Cookies</Link>
                 <Link to="/State" className="item">State</Link>
+                <Link to="/Apollo" className="item">Apollo</Link>
             </div>
         </div>
     )
